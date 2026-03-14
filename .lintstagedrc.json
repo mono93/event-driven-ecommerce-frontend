@@ -1,5 +1,3 @@
 {
-  "{src,test}/**/*.{ts,json}": [
-    "prettier --check"
-  ]
+  "*.{json,md,css,ts,tsx}": ["prettier --check"]
 }
