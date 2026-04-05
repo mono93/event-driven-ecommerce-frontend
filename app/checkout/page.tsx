@@ -1,4 +1,4 @@
-import { Card, Space, Button } from 'antd';
+import { Card, Space, Button } from "antd";
 
 export default function CheckoutPage() {
   return (

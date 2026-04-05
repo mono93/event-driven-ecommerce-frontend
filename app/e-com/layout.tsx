@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { useMemo } from 'react';
-import { Badge, Layout, theme } from 'antd';
-import { ArrowLeftOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { useRouter, usePathname } from 'next/navigation';
-import { useCartStore } from '../store/cartStore';
+import type { ReactNode } from "react";
+import { useMemo } from "react";
+import { Badge, Layout, theme } from "antd";
+import { ArrowLeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { useRouter, usePathname } from "next/navigation";
+import { useCartStore } from "../store/cartStore";
 
 const { Header, Content, Footer } = Layout;
 
@@ -24,17 +24,17 @@ export default function StoreLayout({ children }: Readonly<{ children: ReactNode
 
   return (
     <Layout>
-      <Header style={{ display: 'flex', alignItems: 'center' }}>
-        {pathname !== '/e-com' && (
+      <Header style={{ display: "flex", alignItems: "center" }}>
+        {pathname !== "/e-com" && (
           <ArrowLeftOutlined
-            style={{ color: 'white', cursor: 'pointer' }}
+            style={{ color: "white", cursor: "pointer" }}
             onClick={() => router.back()}
           />
         )}
-        <div style={{ marginLeft: 'auto' }}>
+        <div style={{ marginLeft: "auto" }}>
           <Badge count={totalCount} size="small" offset={[7, 1]}>
             <ShoppingCartOutlined
-              style={{ color: 'white', cursor: 'pointer', fontSize: '20px' }}
+              style={{ color: "white", cursor: "pointer", fontSize: "20px" }}
               onClick={() => router.push(`/checkout`)}
             />
           </Badge>
@@ -44,7 +44,7 @@ export default function StoreLayout({ children }: Readonly<{ children: ReactNode
         <div
           style={{
             background: colorBgContainer,
-            minHeight: 'calc(100vh - 180px)',
+            minHeight: "calc(100vh - 180px)",
             padding: 24,
             borderRadius: borderRadiusLG,
           }}
@@ -52,7 +52,7 @@ export default function StoreLayout({ children }: Readonly<{ children: ReactNode
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
+      <Footer style={{ textAlign: "center" }}>
         ©{new Date().getFullYear()} Created by Monojit Saha
       </Footer>
     </Layout>

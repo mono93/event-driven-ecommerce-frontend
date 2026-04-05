@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import type { ReactNode } from 'react';
-import { useRouter } from 'next/navigation';
-import { Layout, theme } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import type { ReactNode } from "react";
+import { useRouter } from "next/navigation";
+import { Layout, theme } from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 const { Header, Content, Footer } = Layout;
 
@@ -15,14 +15,14 @@ export default function CheckoutLayout({ children }: Readonly<{ children: ReactN
 
   return (
     <Layout>
-      <Header style={{ display: 'flex', alignItems: 'center' }}>
-        <ArrowLeftOutlined style={{ color: 'white' }} onClick={() => router.back()} />
+      <Header style={{ display: "flex", alignItems: "center" }}>
+        <ArrowLeftOutlined style={{ color: "white" }} onClick={() => router.back()} />
       </Header>
       <Content style={{ padding: 24 }}>
         <div
           style={{
             background: colorBgContainer,
-            minHeight: 'calc(100vh - 180px)',
+            minHeight: "calc(100vh - 180px)",
             padding: 24,
             borderRadius: borderRadiusLG,
           }}
@@ -30,7 +30,7 @@ export default function CheckoutLayout({ children }: Readonly<{ children: ReactN
           {children}
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
+      <Footer style={{ textAlign: "center" }}>
         ©{new Date().getFullYear()} Created by Monojit Saha
       </Footer>
     </Layout>

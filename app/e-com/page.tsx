@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useRouter } from 'next/navigation';
-import { ProductCard } from '@/components/ProductCard';
-import { useCartStore } from '@/app/store/cartStore';
+import { useRouter } from "next/navigation";
+import { ProductCard } from "@/components/ProductCard";
+import { useCartStore } from "@/app/store/cartStore";
 
 export default function StoreFrontPage() {
   const router = useRouter();
@@ -38,5 +38,5 @@ export default function StoreFrontPage() {
     />
   ));
 
-  return <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px' }}>{productCards}</div>;
+  return <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>{productCards}</div>;
 }

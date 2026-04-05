@@ -1,6 +1,6 @@
-import { Button } from 'antd';
-import { DeleteOutlined, MinusCircleOutlined, PlusCircleOutlined } from '@ant-design/icons';
-import Image from 'next/image';
+import { Button } from "antd";
+import { DeleteOutlined, MinusCircleOutlined, PlusCircleOutlined } from "@ant-design/icons";
+import Image from "next/image";
 
 export default function ProductPage() {
   return (
@@ -12,7 +12,7 @@ export default function ProductPage() {
           src="/images/product_sample_icon_picture.png"
           width={300}
           height={300}
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: "cover" }}
         />
       </div>
 
@@ -26,9 +26,9 @@ export default function ProductPage() {
         </div>
 
         <div className="flex flex-row gap-2">
-          <Button type="primary" shape="round" icon={<PlusCircleOutlined />} size={'large'} />
-          <Button type="primary" shape="round" icon={<MinusCircleOutlined />} size={'large'} />
-          <Button type="primary" shape="round" icon={<DeleteOutlined />} size={'large'}>
+          <Button type="primary" shape="round" icon={<PlusCircleOutlined />} size={"large"} />
+          <Button type="primary" shape="round" icon={<MinusCircleOutlined />} size={"large"} />
+          <Button type="primary" shape="round" icon={<DeleteOutlined />} size={"large"}>
             Remove
           </Button>
         </div>
