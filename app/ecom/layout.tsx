@@ -25,7 +25,7 @@ export default function StoreLayout({ children }: Readonly<{ children: ReactNode
   return (
     <Layout>
       <Header style={{ display: "flex", alignItems: "center" }}>
-        {pathname !== "/e-com" && (
+        {pathname !== "/ecom" && (
           <ArrowLeftOutlined
             style={{ color: "white", cursor: "pointer" }}
             onClick={() => router.back()}

@@ -1,32 +1,66 @@
-import { Card, Space, Button } from "antd";
+"use client";
+
+import { Card, Button } from "antd";
+import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
+import { useCartStore } from "../store/cartStore";
 
 export default function CheckoutPage() {
+  const { products, increment, decrement } = useCartStore();
+
+  const subtotal = products.reduce((sum: number, item: any) => sum + item.price * item.count, 0);
+
+  const total = subtotal;
+
+  const handleIncrement = (item: any) => {
+    increment(item);
+  };
+
+  const handleDecrement = (id: number) => {
+    decrement(id);
+  };
+
   return (
     <div className="flex gap-6 w-full">
-      {/* LEFT: Product Info */}
+      {/* LEFT: Product List */}
       <div className="flex-1">
-        <Space orientation="vertical" size="middle" className="flex w-full">
-          <Card title="Product 1" size="small">
-            <p>Basic T-shirt</p>
-            <p>₹499</p>
-          </Card>
+        <div className="w-full flex flex-col gap-4">
+          {products.map((item: any) => (
+            <Card key={item.id} title={item.name} size="small">
+              <p>{item.description}</p>
+              <p>₹{item.price}</p>
 
-          <Card title="Product 2" size="small">
-            <p>Jeans</p>
-            <p>₹1299</p>
-          </Card>
+              <div className="flex items-center gap-3 mt-3">
+                <Button
+                  shape="circle"
+                  icon={<MinusCircleOutlined />}
+                  onClick={() => handleDecrement(item.id)}
+                />
 
-          <Card title="Product 3" size="small">
-            <p>Sneakers</p>
-            <p>₹2499</p>
-          </Card>
-        </Space>
+                <span className="font-semibold">{item.count}</span>
+
+                <Button
+                  shape="circle"
+                  icon={<PlusCircleOutlined />}
+                  onClick={() => handleIncrement(item)}
+                />
+              </div>
+
+              <p className="mt-3 font-medium">Total: ₹{item.price * item.count}</p>
+            </Card>
+          ))}
+
+          {products.length === 0 && (
+            <Card size="small">
+              <p>Cart is empty</p>
+            </Card>
+          )}
+        </div>
       </div>
 
-      {/* Divider replacement */}
+      {/* Divider */}
       <div className="w-px bg-gray-300" />
 
-      {/* RIGHT: Total Price / Checkout */}
+      {/* RIGHT: Summary */}
       <div className="flex-1 max-w-md">
         <div className="border border-gray-200 rounded-lg p-4 shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
@@ -34,17 +68,7 @@ export default function CheckoutPage() {
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>₹4297</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span>Shipping</span>
-              <span>₹100</span>
-            </div>
-
-            <div className="flex justify-between">
-              <span>Discount</span>
-              <span className="text-green-600">-₹300</span>
+              <span>₹{subtotal}</span>
             </div>
           </div>
 
@@ -52,10 +76,10 @@ export default function CheckoutPage() {
 
           <div className="flex justify-between font-semibold text-base">
             <span>Total</span>
-            <span>₹4097</span>
+            <span>₹{total}</span>
           </div>
 
-          <Button type="primary" block className="mt-4">
+          <Button type="primary" block className="mt-4" disabled={products.length === 0}>
             Proceed to Payment
           </Button>
         </div>
