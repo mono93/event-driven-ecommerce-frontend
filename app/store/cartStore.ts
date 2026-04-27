@@ -6,6 +6,8 @@ export interface IProduct {
   description: string;
   price: number;
   count: number;
+  stripeProductId: string;
+  stripePriceId: string;
 }
 
 interface CartState {
@@ -13,56 +15,55 @@ interface CartState {
   increment: (product: IProduct) => void;
   decrement: (productId: number) => void;
   removeFromCart: (productId: number) => void;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>((set) => ({
   products: [],
 
-  increment: (product: IProduct) => {
+  increment: (product) =>
     set((state) => {
-      const existingProduct = state.products.find((p) => p.id === product.id);
+      const exists = state.products.some((p) => p.id === product.id);
 
-      if (existingProduct) {
-        // Product exists, increment count
+      if (exists) {
         return {
           products: state.products.map((p) =>
             p.id === product.id ? { ...p, count: p.count + 1 } : p,
           ),
         };
-      } else {
-        // Product doesn't exist, add it with count 1
-        return {
-          products: [...state.products, { ...product, count: 1 }],
-        };
       }
-    });
-  },
 
-  decrement: (productId: number) => {
+      return {
+        products: [...state.products, { ...product, count: 1 }],
+      };
+    }),
+
+  decrement: (productId) =>
     set((state) => {
-      const existingProduct = state.products.find((p) => p.id === productId);
+      const product = state.products.find((p) => p.id === productId);
 
-      if (!existingProduct) return state;
+      if (!product) return state;
 
-      if (existingProduct.count <= 1) {
-        // Remove item if count reaches 0
+      if (product.count === 1) {
         return {
           products: state.products.filter((p) => p.id !== productId),
         };
-      } else {
-        // Decrease count
-        return {
-          products: state.products.map((p) =>
-            p.id === productId ? { ...p, count: p.count - 1 } : p,
-          ),
-        };
       }
-    });
-  },
 
-  removeFromCart: (productId: number) => {
+      return {
+        products: state.products.map((p) =>
+          p.id === productId ? { ...p, count: p.count - 1 } : p,
+        ),
+      };
+    }),
+
+  removeFromCart: (productId) =>
     set((state) => ({
       products: state.products.filter((p) => p.id !== productId),
-    }));
-  },
+    })),
+
+  clearCart: () =>
+    set({
+      products: [],
+    }),
 }));

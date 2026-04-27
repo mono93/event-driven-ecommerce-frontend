@@ -1,11 +1,16 @@
 "use client";
 
-import { Card, Button } from "antd";
+import { Card, Button, message } from "antd";
 import { PlusCircleOutlined, MinusCircleOutlined } from "@ant-design/icons";
 import { useCartStore } from "../store/cartStore";
+import { useUserStore } from "../store/userStore";
+import { useState } from "react";
 
 export default function CheckoutPage() {
-  const { products, increment, decrement } = useCartStore();
+  const { products, increment, decrement, clearCart } = useCartStore();
+  const { user } = useUserStore();
+
+  const [loading, setLoading] = useState(false);
 
   const subtotal = products.reduce((sum: number, item: any) => sum + item.price * item.count, 0);
 
@@ -19,11 +24,108 @@ export default function CheckoutPage() {
     decrement(id);
   };
 
+  const proceedToOrder = async () => {
+    if (!user) {
+      message.error("User not found");
+      return;
+    }
+
+    if (products.length === 0) {
+      message.error("Cart is empty");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const orderId = await createOrder();
+
+      if (!orderId) {
+        message.error("Failed to create order");
+        return;
+      }
+
+      const checkoutUrl = await createCheckoutSession(orderId);
+
+      if (checkoutUrl) {
+        globalThis.location.href = checkoutUrl;
+      } else {
+        message.error("Failed to create checkout session");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Something went wrong");
+    } finally {
+      setLoading(false);
+      clearCart();
+    }
+  };
+
+  const createOrder = async () => {
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          items: products.map((p: any) => ({
+            priceId: p.stripePriceId,
+            quantity: p.count,
+          })),
+        }),
+      });
+
+      const result = await response.json();
+
+      console.log("Order Response:", result);
+
+      return result?.data?.orderId;
+    } catch (error) {
+      console.error("Create Order Error:", error);
+      return null;
+    }
+  };
+
+  const createCheckoutSession = async (orderId: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/payment/create-checkout-session`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: user?.id,
+            orderId,
+            items: products.map((p: any) => ({
+              priceId: p.stripePriceId,
+              quantity: p.count,
+            })),
+            successUrl: `${globalThis.location.origin}/payment/status?status=success`,
+            cancelUrl: `${globalThis.location.origin}/payment/status?status=cancel`,
+          }),
+        },
+      );
+
+      const result = await response.json();
+
+      console.log("Checkout Response:", result);
+
+      return result?.data?.url;
+    } catch (error) {
+      console.error("Checkout Error:", error);
+      return null;
+    }
+  };
+
   return (
     <div className="flex gap-6 w-full">
-      {/* LEFT: Product List */}
+      {/* LEFT SIDE */}
       <div className="flex-1">
-        <div className="w-full flex flex-col gap-4">
+        <div className="flex flex-col gap-4">
           {products.map((item: any) => (
             <Card key={item.id} title={item.name} size="small">
               <p>{item.description}</p>
@@ -50,26 +152,24 @@ export default function CheckoutPage() {
           ))}
 
           {products.length === 0 && (
-            <Card size="small">
+            <Card>
               <p>Cart is empty</p>
             </Card>
           )}
         </div>
       </div>
 
-      {/* Divider */}
+      {/* DIVIDER */}
       <div className="w-px bg-gray-300" />
 
-      {/* RIGHT: Summary */}
+      {/* RIGHT SIDE */}
       <div className="flex-1 max-w-md">
         <div className="border border-gray-200 rounded-lg p-4 shadow-sm">
           <h2 className="text-lg font-semibold mb-4">Order Summary</h2>
 
-          <div className="space-y-2 text-sm">
-            <div className="flex justify-between">
-              <span>Subtotal</span>
-              <span>₹{subtotal}</span>
-            </div>
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>₹{subtotal}</span>
           </div>
 
           <div className="border-t my-4" />
@@ -79,7 +179,14 @@ export default function CheckoutPage() {
             <span>₹{total}</span>
           </div>
 
-          <Button type="primary" block className="mt-4" disabled={products.length === 0}>
+          <Button
+            type="primary"
+            block
+            className="mt-4"
+            loading={loading}
+            disabled={products.length === 0}
+            onClick={proceedToOrder}
+          >
             Proceed to Payment
           </Button>
         </div>

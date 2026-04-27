@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 import { useMemo } from "react";
 import { Badge, Layout, theme } from "antd";
-import { ArrowLeftOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined, ShoppingCartOutlined, ShoppingOutlined } from "@ant-design/icons";
 import { useRouter, usePathname } from "next/navigation";
 import { useCartStore } from "../store/cartStore";
 
@@ -33,6 +33,10 @@ export default function StoreLayout({ children }: Readonly<{ children: ReactNode
         )}
         <div style={{ marginLeft: "auto" }}>
           <Badge count={totalCount} size="small" offset={[7, 1]}>
+            <ShoppingOutlined
+              style={{ color: "white", cursor: "pointer", fontSize: "20px", marginRight: "20px" }}
+              onClick={() => router.push("/orders")}
+            />
             <ShoppingCartOutlined
               style={{ color: "white", cursor: "pointer", fontSize: "20px" }}
               onClick={() => router.push(`/checkout`)}

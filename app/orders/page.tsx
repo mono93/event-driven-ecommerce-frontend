@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Card, Tag, Collapse, List, Pagination, Spin, Empty } from "antd";
+import { useUserStore } from "../store/userStore";
 
 const { Panel } = Collapse;
 
@@ -11,8 +12,10 @@ export default function OrderListPage() {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [total, setTotal] = useState(0);
+  const { user } = useUserStore();
 
-  const userId = "69da68b479caa5163b2370b9"; // replace later
+  const userId = user?.id;
+  console.log("Fetching orders for user ID:", user);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -110,6 +113,7 @@ export default function OrderListPage() {
 
       <div className="flex justify-center">
         <Pagination
+          simple
           current={page}
           pageSize={limit}
           total={total}

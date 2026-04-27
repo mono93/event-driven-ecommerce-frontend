@@ -5,15 +5,35 @@ import { ProductCard } from "@/components/ProductCard";
 import { useCartStore } from "@/app/store/cartStore";
 import { Pagination } from "antd";
 import { Fragment, useEffect, useState } from "react";
+import { useUserStore } from "../store/userStore";
 
 export default function StoreFrontPage() {
   const router = useRouter();
   const { increment, decrement } = useCartStore();
+  const { setUser } = useUserStore();
 
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [total, setTotal] = useState(0);
+
+  useEffect(() => {
+    setUser({
+      id: "69da68b479caa5163b2370b9",
+      firstName: "Monojit",
+      lastName: "Saha",
+      email: "monojeetsaha1993@gmail.com",
+      address: {
+        line1: "30/22/C/1 S.N.Govt. Colony Morepukur Rishra",
+        line2: "",
+        city: "Rishra",
+        postalCode: 712250,
+        state: "West Bengal",
+        country: "IN",
+      },
+      stripeCustomerId: "cus_U6dRj9Fgl2f51r",
+    });
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
