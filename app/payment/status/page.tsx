@@ -1,11 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button, Result, Spin } from "antd";
 import { useUserStore } from "@/app/store/userStore";
 
-export default function PaymentSuccessPage() {
+function PaymentStatusContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -85,5 +85,19 @@ export default function PaymentSuccessPage() {
         </Button>,
       ]}
     />
+  );
+}
+
+export default function PaymentSuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center min-h-screen">
+          <Spin size="large" />
+        </div>
+      }
+    >
+      <PaymentStatusContent />
+    </Suspense>
   );
 }
